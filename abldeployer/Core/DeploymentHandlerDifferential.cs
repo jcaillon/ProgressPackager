@@ -26,7 +26,9 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using abldeployer.Core.Config;
 using abldeployer.Core.Exceptions;
+using abldeployer.Core.Execution;
 using abldeployer.Lib;
 
 namespace abldeployer.Core {
@@ -39,7 +41,7 @@ namespace abldeployer.Core {
         /// <summary>
         ///     Constructor
         /// </summary>
-        public DeploymentHandlerDifferential(Config.ProConfig proEnv) : base(proEnv) {
+        public DeploymentHandlerDifferential(ConfigDeploymentDifferential proEnv) : base(proEnv) {
             ForceFullDeploy = proEnv.ForceFullDeploy;
             ComputeMd5 = proEnv.ComputeMd5;
             IsTestMode = proEnv.IsTestMode;
@@ -263,6 +265,8 @@ namespace abldeployer.Core {
         private float _listingPercentage;
 
         private bool _isListing;
+
+        protected new ConfigDeploymentDifferential _proEnv;
 
         #endregion
 

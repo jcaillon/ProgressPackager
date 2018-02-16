@@ -80,7 +80,15 @@
     <Compile Include="Compression\Zip\ZipPackager.cs" />
     <Compile Include="Compression\Zip\ZipPacker.cs" />
     <Compile Include="Compression\Zip\ZipUnpacker.cs" />
-    <Compile Include="Core\Config.cs" />
+    <Compile Include="Core\Config\ConfigDeploymentPackaging.cs" />
+    <Compile Include="Core\Config\ConfigDeploymentDifferential.cs" />
+    <Compile Include="Core\Config\ConfigDeployment.cs" />
+    <Compile Include="Core\Config\ConfigExecutionDatabase.cs" />
+    <Compile Include="Core\Config\ConfigExecution.cs" />
+    <Compile Include="Core\Config\ConfigExecutionMultiCompilation.cs" />
+    <Compile Include="Core\Config\ConfigExecutionCompilation.cs" />
+    <Compile Include="Core\Config\IConfigExecution.cs" />
+    <Compile Include="Core\Config\IConfigExecutionDatabase.cs" />
     <Compile Include="Core\Deployer.cs" />
     <Compile Include="Core\DeploymentHandler.cs" />
     <Compile Include="Core\DeploymentHandlerDifferential.cs" />
@@ -90,12 +98,30 @@
     <Compile Include="Core\Exceptions\MultiCompilationException.cs" />
     <Compile Include="Core\Exceptions\ExecutionException.cs" />
     <Compile Include="Core\Exceptions\DeploymentException.cs" />
+    <Compile Include="Core\Execution\ExecutionType.cs" />
+    <Compile Include="Core\Execution\ProExecutionAppbuilder.cs" />
+    <Compile Include="Core\Execution\ProExecutionCheckSyntax.cs" />
+    <Compile Include="Core\Execution\ProExecutionCompile.cs" />
+    <Compile Include="Core\Execution\ProExecutionDatabase.cs" />
+    <Compile Include="Core\Execution\ProExecutionDataDigger.cs" />
+    <Compile Include="Core\Execution\ProExecutionDataReader.cs" />
+    <Compile Include="Core\Execution\ProExecutionDbAdmin.cs" />
+    <Compile Include="Core\Execution\ProExecutionDeploymentHook.cs" />
+    <Compile Include="Core\Execution\ProExecutionDictionary.cs" />
+    <Compile Include="Core\Execution\ProExecutionGenerateDebugfile.cs" />
+    <Compile Include="Core\Execution\ProExecutionProDesktop.cs" />
+    <Compile Include="Core\Execution\ProExecutionProlint.cs" />
+    <Compile Include="Core\Execution\ProExecutionProVersion.cs" />
+    <Compile Include="Core\Execution\ProExecutionRun.cs" />
+    <Compile Include="Core\Execution\ProExecutionTableCrc.cs" />
     <Compile Include="Core\FileDeployed.cs" />
     <Compile Include="Core\FileToCompile.cs" />
     <Compile Include="Core\FileToDeploy.cs" />
     <Compile Include="Core\MultiCompilation.cs" />
-    <Compile Include="Core\ProExecution.cs" />
-    <Compile Include="Core\ProExecutionHandleCompilation.cs" />
+    <Compile Include="Core\Execution\ProExecution.cs" />
+    <Compile Include="Core\Execution\ProExecutionHandleCompilation.cs" />
+    <Compile Include="Core\Config\ReturnCode.cs" />
+    <Compile Include="Core\Config\RunMode.cs" />
     <Compile Include="Ftp\Common.cs" />
     <Compile Include="Ftp\DirectoryListParser.cs" />
     <Compile Include="Ftp\Exceptions.cs" />
@@ -108,7 +134,6 @@
     <Compile Include="Lib\Extensions.cs" />
     <Compile Include="Lib\FastReplacer.cs" />
     <Compile Include="Lib\FastReplacerSnippet.cs" />
-    <Compile Include="Lib\IniReader.cs" />
     <Compile Include="Lib\ProcessIo.cs" />
     <Compile Include="Lib\ProgressCopy.cs" />
     <Compile Include="Lib\TextEncodingDetect.cs" />
@@ -125,9 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Abl\DeploymentHook.p" />
+    <None Include="Resources\Abl\DumpDatabase.p" />
     <None Include="Resources\Abl\DumpTableCrc.p" />
     <None Include="Resources\Abl\ProgressRun.p" />
     <None Include="Resources\Abl\prowcapp.prowcapp" />
+    <None Include="Resources\Abl\StartProlint.p" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AblResource.resx">

@@ -30,6 +30,7 @@ namespace abldeployer.Lib {
     ///     Class that exposes utility methods
     /// </summary>
     internal static class Utils {
+
         #region File manipulation wrappers
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace abldeployer.Lib {
         }
 
         /// <summary>
-        ///     Delete a dir, recursively
+        /// Delete a dir, recursively
         /// </summary>
         public static bool DeleteDirectory(string path, bool recursive) {
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
@@ -160,5 +161,6 @@ namespace abldeployer.Lib {
         }
 
         #endregion
+
     }
 }

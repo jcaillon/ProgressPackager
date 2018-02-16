@@ -28,6 +28,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using abldeployer.Compression;
+using abldeployer.Core.Config;
+using abldeployer.Core.Execution;
 using abldeployer.Lib;
 
 namespace abldeployer.Core {
@@ -40,7 +42,7 @@ namespace abldeployer.Core {
         /// <summary>
         ///     Constructor
         /// </summary>
-        public Deployer(List<DeployRule> deployRules, Config.ProConfig proEnv) {
+        public Deployer(List<DeployRule> deployRules, ConfigExecutionCompilation proEnv) {
             _compileLocally = proEnv.CompileLocally;
             _deploymentDirectory = proEnv.TargetDirectory;
             _sourceDirectory = Path.GetFullPath(proEnv.SourceDirectory).TrimEnd('\\');

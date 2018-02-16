@@ -27,10 +27,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace abldeployer.Lib {
+
     /// <summary>
-    ///     This class regroups all the extension methods
+    /// This class regroups all the extension methods
     /// </summary>
-    public static class Extensions {
+    internal static class Extensions {
+
         private static Dictionary<Type, List<Tuple<string, long>>> _enumTypeNameValueKeyPairs = new Dictionary<Type, List<Tuple<string, long>>>();
 
         public static void ForEach<T>(this Type curType, Action<string, long> actionForEachNameValue) {

@@ -1,26 +1,13 @@
 /*
-// ========================================================================
-// Copyright (c) 2016 - Julien Caillon (julien.caillon@gmail.com)
-// This file (DumpTableCrc.p) is part of 3P.
-// 
-// 3P is a free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// 3P is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with 3P. If not, see <http://www.gnu.org/licenses/>.
-// ========================================================================
+	Author(s) : Julien Caillon (julien.caillon@gmail.com)
+	This file was created with the 3P :  https://jcaillon.github.io/3P/
 */
 
 DEFINE INPUT PARAMETER gc_FileName AS CHARACTER NO-UNDO.
 DEFINE INPUT PARAMETER ipc_baseName AS CHARACTER NO-UNDO. /* */
 DEFINE INPUT PARAMETER ipc_physicalName AS CHARACTER NO-UNDO. /* */
+DEFINE INPUT PARAMETER ipc_candoTableType AS CHARACTER NO-UNDO. /* */
+DEFINE INPUT PARAMETER ipc_candoFileName AS CHARACTER NO-UNDO. /* */
 
 DEFINE VARIABLE gc_sep AS CHARACTER NO-UNDO INITIAL "~t".
 
@@ -34,10 +21,10 @@ PUT STREAM str_out UNFORMATTED "#<Table name>|<Table CRC>" SKIP.
 
 /* Write table information */
 /* Format is: <Table name>|<Table CRC> */
-FOR EACH DICTDB._FILE NO-LOCK WHERE NOT DICTDB._FILE._HIDDEN AND DICTDB._FILE._Tbl-Type = "T":
+FOR EACH TPALDB._FILE NO-LOCK WHERE CAN-DO(ipc_candoTableType, TPALDB._FILE._Tbl-Type) AND CAN-DO(ipc_candoFileName, TPALDB._FILE._FILE-NAME):
     PUT STREAM str_out UNFORMATTED
-        ipc_baseName + "." + TRIM(fi_subst(DICTDB._FILE._FILE-NAME)) + gc_sep +
-        fi_subst(STRING(DICTDB._FILE._CRC))
+        ipc_baseName + "." + TRIM(fi_subst(TPALDB._FILE._FILE-NAME)) + gc_sep +
+        fi_subst(STRING(TPALDB._FILE._CRC))
         SKIP.
 END.
 

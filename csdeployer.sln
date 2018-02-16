@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csdeployer", "csdeployer.csproj", "{17AF8682-1A14-4EC4-94B6-B29FCEE1CC58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csdeployer", "csdeployer\csdeployer.csproj", "{17AF8682-1A14-4EC4-94B6-B29FCEE1CC58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abldeployer", "..\abldeployer\abldeployer.csproj", "{B4E88E0F-932D-4C45-B048-B24381D58FC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abldeployer", "abldeployer\abldeployer.csproj", "{B4E88E0F-932D-4C45-B048-B24381D58FC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

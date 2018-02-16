@@ -25,7 +25,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace abldeployer.Lib {
+namespace csdeployer.Lib {
+
     /// <summary>
     ///     This classes reads a .ini file
     /// </summary>
@@ -43,7 +44,7 @@ namespace abldeployer.Lib {
             var currentSection = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             if (!File.Exists(file)) return;
             _ini[""] = currentSection;
-            Utils.ForEachLine(file, null, (i, line) => {
+            abldeployer.Lib.Utils.ForEachLine(file, null, (i, line) => {
                 line = line.Trim();
                 if (line.StartsWith(";"))
                     return;

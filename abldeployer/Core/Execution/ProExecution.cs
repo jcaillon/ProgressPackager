@@ -26,16 +26,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using abldeployer.Core.Config;
 using abldeployer.Core.Exceptions;
 using abldeployer.Lib;
 
-namespace abldeployer.Core {
-    #region ProExecution
+namespace abldeployer.Core.Execution {
 
     /// <summary>
     ///     Base class for all the progress execution (i.e. when we need to start a prowin process and do something)
     /// </summary>
     public abstract class ProExecution {
+
         #region Do
 
         /// <summary>
@@ -51,7 +52,8 @@ namespace abldeployer.Core {
 
             // create a unique temporary folder
             _localTempDir = Path.Combine(ProEnv.FolderTemp, "exec_" + DateTime.Now.ToString("HHmmssfff") + "_" + Path.GetRandomFileName());
-            if (!Directory.Exists(_localTempDir)) Directory.CreateDirectory(_localTempDir);
+            if (!Directory.Exists(_localTempDir)) 
+                Directory.CreateDirectory(_localTempDir);
 
             // move .ini file into the execution directory
             if (File.Exists(ProEnv.IniPath)) {
@@ -73,7 +75,7 @@ namespace abldeployer.Core {
             _logPath = Path.Combine(_localTempDir, "run.log");
             _dbLogPath = Path.Combine(_localTempDir, "db.ko");
             _notifPath = Path.Combine(_localTempDir, "postExecution.notif");
-            _propath = (_localTempDir + "," + string.Join(",", ProEnv.GetProPathDirList.ToArray())).Trim().Trim(',');
+            _propath = (_localTempDir + "," + string.Join(",", ProEnv.GetProPathDirList)).Trim().Trim(',') + "\r\n";
             _propathFilePath = Path.Combine(_localTempDir, "progress.propath");
             File.WriteAllText(_propathFilePath, _propath, Encoding.Default);
 
@@ -88,6 +90,7 @@ namespace abldeployer.Core {
             SetPreprocessedVar("NotificationOutputPath", _notifPath.PreProcQuoter());
             SetPreprocessedVar("PreExecutionProgram", ProEnv.PreExecutionProgram.Trim().PreProcQuoter());
             SetPreprocessedVar("PostExecutionProgram", ProEnv.PostExecutionProgram.Trim().PreProcQuoter());
+            SetPreprocessedVar("DatabaseAliasList", ProEnv.DatabaseAliasList.Trim().Trim(';').PreProcQuoter());
 
             // prepare the .p runner
             _runnerPath = Path.Combine(_localTempDir, "run_" + DateTime.Now.ToString("HHmmssfff") + ".p");
@@ -159,7 +162,7 @@ namespace abldeployer.Core {
         /// <summary>
         ///     Copy of the pro env to use
         /// </summary>
-        public Config.ProConfig ProEnv { get; private set; }
+        public IConfigExecution ProEnv { get; private set; }
 
         /// <summary>
         ///     set to true if a the execution process has been killed
@@ -244,7 +247,7 @@ namespace abldeployer.Core {
             Clean();
         }
 
-        public ProExecution(Config.ProConfig proEnv) {
+        public ProExecution(IConfigExecution proEnv) {
             ProEnv = proEnv;
             _preprocessedVars = new Dictionary<string, string> {
                 {"LogPath", "\"\""},
@@ -260,7 +263,10 @@ namespace abldeployer.Core {
                 {"DbConnectionMandatory", "false"},
                 {"NotificationOutputPath", "\"\""},
                 {"PreExecutionProgram", "\"\""},
-                {"PostExecutionProgram", "\"\""}
+                {"PostExecutionProgram", "\"\""},
+                {"DatabaseExtractCandoTblType", "\"\""},
+                {"DatabaseExtractCandoTblName", "\"\""},
+                {"DatabaseAliasList", "\"\""},
             };
         }
 
@@ -392,11 +398,8 @@ namespace abldeployer.Core {
                     ExecutionFailed = true;
                 } else if (new FileInfo(_logPath).Length > 0) {
                     // else if the log isn't empty, something went wrong
-                    var logContent = Utils.ReadAllText(_logPath, Encoding.Default).Trim();
-                    if (!string.IsNullOrEmpty(logContent)) {
-                        AddHandledExceptions(new ExecutionException("An error has occurred during the execution : " + logContent));
-                        ExecutionFailed = true;
-                    }
+                    AddHandledExceptions(new ExecutionException("An error has occurred during the execution : " + Utils.ReadAllText(_logPath, Encoding.Default)));
+                    ExecutionFailed = true;
                 }
 
                 // if the db log file exists, then the connect statement failed, warn the user
@@ -457,138 +460,4 @@ namespace abldeployer.Core {
         #endregion
     }
 
-    #endregion
-
-    #region ProExecutionProVersion
-
-    public class ProExecutionProVersion : ProExecution {
-        private string _outputPath;
-
-        public override ExecutionType ExecutionType {
-            get { return ExecutionType.ProVersion; }
-        }
-
-        public string ProVersion {
-            get { return Utils.ReadAllText(_outputPath, Encoding.Default); }
-        }
-
-        public ProExecutionProVersion(Config.ProConfig proEnv) : base(proEnv) { }
-
-        protected override void SetExecutionInfo() {
-            _outputPath = Path.Combine(_localTempDir, "pro.version");
-            SetPreprocessedVar("OutputPath", _outputPath.PreProcQuoter());
-        }
-
-        protected override void AppendProgressParameters(StringBuilder sb) {
-            sb.Clear();
-            _exeParameters.Append(" -b -p " + _runnerPath.Quoter());
-        }
-
-        protected override bool CanUseBatchMode() {
-            return true;
-        }
-    }
-
-    #endregion
-
-    #region ProExecutionTableCrc
-
-    /// <summary>
-    ///     Allows to output a file containing the structure of the database
-    /// </summary>
-    public class ProExecutionTableCrc : ProExecution {
-        public ProExecutionTableCrc(Config.ProConfig proEnv) : base(proEnv) { }
-
-        #region Methods
-
-        /// <summary>
-        ///     Get a list with all the tables + CRC
-        /// </summary>
-        /// <returns></returns>
-        public List<TableCrc> GetTableCrc() {
-            var output = new List<TableCrc>();
-            Utils.ForEachLine(OutputPath, new byte[0], (i, line) => {
-                var split = line.Split('\t');
-                if (split.Length == 2)
-                    output.Add(new TableCrc {
-                        QualifiedTableName = split[0],
-                        Crc = split[1]
-                    });
-            }, Encoding.Default);
-            return output;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public override ExecutionType ExecutionType {
-            get { return ExecutionType.TableCrc; }
-        }
-
-        /// <summary>
-        ///     File to the output path that contains the CRC of each table
-        /// </summary>
-        public string OutputPath { get; set; }
-
-        #endregion
-
-        #region Override
-
-        protected override void SetExecutionInfo() {
-            OutputPath = Path.Combine(_localTempDir, "db.extract");
-            SetPreprocessedVar("OutputPath", OutputPath.PreProcQuoter());
-
-            var fileToExecute = "db_" + DateTime.Now.ToString("yyMMdd_HHmmssfff") + ".p";
-            File.WriteAllBytes(Path.Combine(_localTempDir, fileToExecute), ProEnv.ProgramDumpTableCrc);
-            SetPreprocessedVar("CurrentFilePath", fileToExecute.PreProcQuoter());
-        }
-
-        protected override bool CanUseBatchMode() {
-            return true;
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region ProExecutionDeploymentHook
-
-    public class ProExecutionDeploymentHook : ProExecution {
-        public override ExecutionType ExecutionType {
-            get { return ExecutionType.DeploymentHook; }
-        }
-
-        public string DeploymentSourcePath { get; set; }
-
-        public int DeploymentStep { get; set; }
-
-        public ProExecutionDeploymentHook(Config.ProConfig proEnv) : base(proEnv) { }
-
-        protected override void SetExecutionInfo() {
-            var fileToExecute = "hook_" + DateTime.Now.ToString("yyMMdd_HHmmssfff") + ".p";
-            var hookProc = new StringBuilder();
-            hookProc.AppendLine("&SCOPED-DEFINE StepNumber " + DeploymentStep);
-            hookProc.AppendLine("&SCOPED-DEFINE SourceDirectory " + DeploymentSourcePath.PreProcQuoter());
-            hookProc.AppendLine("&SCOPED-DEFINE DeploymentDirectory " + ProEnv.TargetDirectory.PreProcQuoter());
-            var encoding = TextEncodingDetect.GetFileEncoding(ProEnv.FileDeploymentHook);
-            File.WriteAllText(Path.Combine(_localTempDir, fileToExecute), Utils.ReadAllText(ProEnv.FileDeploymentHook, encoding).Replace(@"/*<inserted_3P_values>*/", hookProc.ToString()), encoding);
-
-            SetPreprocessedVar("CurrentFilePath", fileToExecute.PreProcQuoter());
-        }
-    }
-
-    #endregion
-
-    #region ExecutionType
-
-    public enum ExecutionType {
-        Compile = 1,
-        DeploymentHook = 17,
-        ProVersion = 18,
-        TableCrc = 19
-    }
-
-    #endregion
 }

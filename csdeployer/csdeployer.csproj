@@ -70,7 +70,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ConfigXml.cs" />
+    <Compile Include="Core\CsConfigDeploymentPackaging.cs" />
+    <Compile Include="Core\CsDeployerConfigXml.cs" />
+    <Compile Include="Core\CsDeployerConfig.cs" />
     <Compile Include="Core\ErrorHandler.cs" />
     <Compile Include="Core\MainTreatment.cs" />
     <Compile Include="Form\ProgressTreatment.cs" />
@@ -83,9 +85,11 @@
     <Compile Include="Html\HtmlDeployRule.cs" />
     <Compile Include="Html\HtmlFileError.cs" />
     <Compile Include="Html\HtmlFileToDeploy.cs" />
+    <Compile Include="Html\HtmlReport.cs" />
     <Compile Include="Lib\AssemblyInfo.cs" />
     <Compile Include="Lib\Extensions.cs" />
     <Compile Include="Lib\FileExt.cs" />
+    <Compile Include="Lib\IniReader.cs" />
     <Compile Include="Lib\Utils.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

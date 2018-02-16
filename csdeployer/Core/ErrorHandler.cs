@@ -44,7 +44,7 @@ namespace csdeployer.Core {
                 if (message != null)
                     info.Message = message + " : " + info.Message;
 
-                ConfigXml.Instance.RaisedException = (string.IsNullOrEmpty(ConfigXml.Instance.RaisedException) ? "" : ConfigXml.Instance.RaisedException + "<br>") + info.Message;
+                CsConfigDeploymentPackaging.Instance.RaisedException = (string.IsNullOrEmpty(CsConfigDeploymentPackaging.Instance.RaisedException) ? "" : CsConfigDeploymentPackaging.Instance.RaisedException + "<br>") + info.Message;
 
                 // write in the log
                 toAppend.AppendLine("============================================================");
@@ -57,9 +57,9 @@ namespace csdeployer.Core {
                 }
                 toAppend.AppendLine("");
                 toAppend.AppendLine("");
-                File.AppendAllText(ConfigXml.Instance.ErrorLogFilePath, toAppend.ToString(), Encoding.Default);
+                File.AppendAllText(CsConfigDeploymentPackaging.Instance.ErrorLogFilePath, toAppend.ToString(), Encoding.Default);
             } catch (Exception) {
-                MessageBox.Show("Impossible d'écrire dans le fichier log :\r\n" + (ConfigXml.Instance.ErrorLogFilePath ?? "null") + "\r\n\r\nL'erreur était :\r\n" + toAppend, "Une erreur est survenue", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Impossible d'écrire dans le fichier log :\r\n" + (CsConfigDeploymentPackaging.Instance.ErrorLogFilePath ?? "null") + "\r\n\r\nL'erreur était :\r\n" + toAppend, "Une erreur est survenue", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

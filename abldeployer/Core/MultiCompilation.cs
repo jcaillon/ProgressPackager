@@ -24,7 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using abldeployer.Core.Config;
 using abldeployer.Core.Exceptions;
+using abldeployer.Core.Execution;
 
 namespace abldeployer.Core {
     /// <summary>
@@ -85,7 +87,7 @@ namespace abldeployer.Core {
         /// <summary>
         ///     Pro environment to use
         /// </summary>
-        public Config.ProConfig ProEnv { get; set; }
+        public ConfigExecutionMultiCompilation ProEnv { get; set; }
 
         #endregion
 
@@ -211,7 +213,7 @@ namespace abldeployer.Core {
         /// </summary>
         public MultiCompilation() : this(null) { }
 
-        public MultiCompilation(Config.ProConfig proEnv) {
+        public MultiCompilation(ConfigExecutionMultiCompilation proEnv) {
             ProEnv = proEnv;
             StartingTime = DateTime.Now;
         }

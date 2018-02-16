@@ -24,6 +24,7 @@ using csdeployer.Lib;
 
 namespace csdeployer.Form {
     internal partial class ProgressForm : System.Windows.Forms.Form {
+
         #region Properties
 
         public ProgressTreatment MainTreatment { get; private set; }
@@ -85,14 +86,21 @@ namespace csdeployer.Form {
         /// </summary>
         private void OnProgress(object sender, ProgressionEventArgs e) {
             this.SafeInvoke(form => {
-                bar1.Value = (int) e.GlobalProgression;
-                bar1.Text = Math.Round(e.GlobalProgression, 1) + @"%";
+                try {
+                    if (e != null) {
+                        bar1.Value = (int) e.GlobalProgression;
+                        bar1.Text = Math.Round(e.GlobalProgression, 1) + @"%";
 
-                bar2.Value = (int) e.CurrentStepProgression;
-                bar2.Text = Math.Round(e.CurrentStepProgression, 1) + @"%";
+                        bar2.Value = (int) e.CurrentStepProgression;
+                        bar2.Text = Math.Round(e.CurrentStepProgression, 1) + @"%";
 
-                lblCurrentStep.Text = e.CurrentStepName;
-                lblElapsed.Text = @"Temps total écoulé " + e.ElpasedTime;
+                        lblCurrentStep.Text = e.CurrentStepName;
+                        lblElapsed.Text = @"Temps total écoulé " + e.ElpasedTime;
+                    }
+                } catch (Exception exception) {
+                    lblCurrentStep.Text = @"Oops " + exception.Message;
+                    lblElapsed.Text = @"Temps total écoulé ??";
+                }
             });
         }
 
@@ -105,7 +113,14 @@ namespace csdeployer.Form {
                 Text = Start.Title;
 
             base.OnShown(e);
-            MainTreatment.Start();
+            try {
+                MainTreatment.Start();
+            } catch (Exception exception) {
+                MessageBox.Show(@"Une exception est survenue :" + Environment.NewLine + exception, @"Erreur lors de l'initialisation de l'application", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ForceClose();
+            }
+
+            // do not allow the window to be resized
             MaximumSize = Size;
             MinimumSize = Size;
         }

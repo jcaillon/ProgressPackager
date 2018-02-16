@@ -25,11 +25,13 @@ using System.IO;
 using System.Text;
 
 namespace abldeployer.Lib {
+
     /// <summary>
     ///     This class offers a simple detection of a text file encoding
     /// </summary>
     /// <remarks>Credits go to: https://github.com/AutoIt/text-encoding-detect</remarks>
-    public class TextEncodingDetect {
+    internal class TextEncodingDetect {
+
         #region Enums
 
         public enum EncodingEnum {

@@ -27,8 +27,9 @@ using System.IO;
 using System.Net;
 
 namespace abldeployer.Lib {
+
     /// <summary>
-    ///     This class allows to copy a file or a folder asynchronously, with the possibility to cancel and see the progress
+    /// This class allows to copy a file or a folder asynchronously, with the possibility to cancel and see the progress
     /// </summary>
     internal class ProgressCopy {
         private Stack<FileToCopy> _filesToCopy;

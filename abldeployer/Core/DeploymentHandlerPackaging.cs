@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using abldeployer.Compression.Prolib;
+using abldeployer.Core.Config;
 using abldeployer.Core.Exceptions;
 using abldeployer.Lib;
 
@@ -45,7 +46,7 @@ namespace abldeployer.Core {
         ///     Constructor
         /// </summary>
         /// <param name="proEnv"></param>
-        public DeploymentHandlerPackaging(Config.ProConfig proEnv) : base(proEnv) {
+        public DeploymentHandlerPackaging(ConfigDeploymentPackaging proEnv) : base(proEnv) {
             if (proEnv.CreatePackageInTempDir) {
                 // overload the target directory, we copy it in the real target at the end
                 proEnv.InitialTargetDirectory = proEnv.TargetDirectory;
@@ -179,7 +180,7 @@ namespace abldeployer.Core {
         ///     List of the list of all previous deployments
         ///     sorted from oldest (0) to newer (n)
         /// </summary>
-        public List<Config.ProConfig> ListPreviousDeployements { get; set; }
+        public List<ConfigDeploymentPackaging> ListPreviousDeployements { get; set; }
 
         /// <summary>
         ///     False if we must not create the webclient folder with all the .cab and prowcapp
@@ -199,6 +200,8 @@ namespace abldeployer.Core {
         #endregion
 
         #region Fields
+
+        protected new ConfigDeploymentPackaging _proEnv;
 
         private bool _isCopyingRef;
         private float _refCopyPercentage;
@@ -486,7 +489,7 @@ namespace abldeployer.Core {
             for (int i = ListPreviousDeployements.Count - 1; i >= 0; i--) {
                 var deployment = ListPreviousDeployements[i];
                 List<FileDeployed> deployedFileInPreviousVersion;
-                Config.ProConfig nextDeployment;
+                ConfigDeploymentPackaging nextDeployment;
                 List<FileDeployed> deployedFileInNextVersion;
 
                 // list of the files that are deployed in this version + 1

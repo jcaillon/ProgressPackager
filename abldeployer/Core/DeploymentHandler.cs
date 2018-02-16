@@ -25,7 +25,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using abldeployer.Core.Config;
 using abldeployer.Core.Exceptions;
+using abldeployer.Core.Execution;
 using abldeployer.Lib;
 
 namespace abldeployer.Core {
@@ -36,7 +38,7 @@ namespace abldeployer.Core {
         /// <summary>
         ///     Constructor
         /// </summary>
-        public DeploymentHandler(Config.ProConfig proEnv) {
+        public DeploymentHandler(ConfigDeployment proEnv) {
             _proEnv = proEnv;
             StartingTime = DateTime.Now;
         }
@@ -154,7 +156,7 @@ namespace abldeployer.Core {
             get { return _deploymentErrorOccured; }
         }
 
-        public Config.ProConfig ProEnv {
+        public ConfigDeployment ProEnv {
             get { return _proEnv; }
         }
 
@@ -202,7 +204,7 @@ namespace abldeployer.Core {
 
         protected Dictionary<int, List<FileToDeploy>> _filesToDeployPerStep = new Dictionary<int, List<FileToDeploy>>();
 
-        protected Config.ProConfig _proEnv;
+        protected ConfigDeployment _proEnv;
 
         protected volatile float _currentStepDeployPercentage;
 

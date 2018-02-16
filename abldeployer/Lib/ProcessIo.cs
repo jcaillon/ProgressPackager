@@ -25,7 +25,9 @@ using System.Diagnostics;
 using System.Text;
 
 namespace abldeployer.Lib {
-    public class ProcessIo {
+
+    internal class ProcessIo {
+
         #region public fields
 
         public string Arguments { get; set; }
